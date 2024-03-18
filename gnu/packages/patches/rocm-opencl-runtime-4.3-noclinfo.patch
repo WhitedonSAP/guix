@@ -1,0 +1,27 @@
+Do not build and install clinfo.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0dc5bf4..95a12af 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,7 +27,7 @@ else()
+   find_package(OpenCL REQUIRED)
+ endif()
+ add_subdirectory(amdocl)
+-add_subdirectory(tools/clinfo)
++#add_subdirectory(tools/clinfo)
+ add_subdirectory(tools/cltrace)
+ if(BUILD_TESTS)
+   add_subdirectory(tests/ocltst)
+diff --git a/packaging/CMakeLists.txt b/packaging/CMakeLists.txt
+index a703f58..c07546a 100644
+--- a/packaging/CMakeLists.txt
++++ b/packaging/CMakeLists.txt
+@@ -12,6 +12,6 @@ endif()
+ set(CPACK_DEB_COMPONENT_INSTALL ON)
+ set(CPACK_RPM_COMPONENT_INSTALL ON)
+ 
+-install(TARGETS clinfo DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT binary)
++#install(TARGETS clinfo DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT binary)
+ install(TARGETS amdocl DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT binary)
+ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT binary)
