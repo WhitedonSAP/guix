@@ -372,14 +372,14 @@
 (define-public emacs-activities
   (package
     (name "emacs-activities")
-    (version "0.6")
+    (version "0.7")
     (source
      (origin
        (method url-fetch)
        (uri (string-append
              "https://elpa.gnu.org/packages/activities-" version ".tar"))
        (sha256
-        (base32 "03dc2d9w40qp0qacv5vk49498qyb9y9n6ppd79jbglkpr0a60y21"))))
+        (base32 "17vwbblcwayf1lqfvc64s606cyv1pyh094i3d8fz0k5ivgfp6ybi"))))
     (build-system emacs-build-system)
     (propagated-inputs (list emacs-persist))
     (home-page "https://github.com/alphapapa/activities.el")
@@ -4369,14 +4369,14 @@ as a library for other Emacs packages.")
 (define-public emacs-auctex
   (package
     (name "emacs-auctex")
-    (version "14.0.3")
+    (version "14.0.4")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://elpa.gnu.org/packages/"
                            "auctex-" version ".tar"))
        (sha256
-        (base32 "1xk29nk3r7ilxk2vag3diacamqvlws7mbjk5a0iivz5y6fy7hmjc"))))
+        (base32 "03w6qs4f0ksb8f54zsx189775w3wdyfaqg3dwn20a77y5cvisk52"))))
     (build-system emacs-build-system)
     ;; We use 'emacs' because AUCTeX requires dbus at compile time
     ;; ('emacs-minimal' does not provide dbus).
@@ -9323,14 +9323,14 @@ correct movement and editing than you would otherwise have.")
 (define-public emacs-compat
   (package
     (name "emacs-compat")
-    (version "29.1.4.4")
+    (version "29.1.4.5")
     (source (origin
               (method url-fetch)
               (uri (string-append "https://elpa.gnu.org/packages/"
                                   "compat-" version ".tar"))
               (sha256
                (base32
-                "0710g552b1nznnfx2774gmg6yizs27s0bakqm95nsjrp6kgznbfr"))))
+                "191cjzrw9xm5bvcf8s1yr9hdcn9i02789xfd8pz33lk65s0rq413"))))
     (build-system emacs-build-system)
     (home-page "https://git.sr.ht/~pkal/compat")
     (synopsis "Emacs Lisp Compatibility Library")
@@ -16188,30 +16188,40 @@ using package inferred style.")
       (license license:gpl3+))))
 
 (define-public emacs-lua-mode
-  (package
-    (name "emacs-lua-mode")
-    (version "20210802")
-    (home-page "https://github.com/immerrr/lua-mode/")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url home-page)
-             (commit (string-append "v" version))))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32 "0r3svhggdml2n256k3b0zmbjnw51p46gan6dg07bhavpfrqs5196"))))
-    (build-system emacs-build-system)
-    (arguments
-     `(#:tests? #t
-       #:test-command '("buttercup" "-l" "lua-mode.el")))
-    (native-inputs
-     (list emacs-buttercup lua))
-    (synopsis "Major mode for lua")
-    (description
-     "This Emacs package provides a mode for @uref{https://www.lua.org/,
+  (let ((commit "d074e4134b1beae9ed4c9b512af741ca0d852ba3")
+        (revision "1"))
+    (package
+      (name "emacs-lua-mode")
+      (version (git-version "20221027" revision commit))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/immerrr/lua-mode/")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32 "00gvrmw8pll0cl7srygh2kmbf0g44sk9asj5sm77qvhr8jz4xkkq"))))
+      (build-system emacs-build-system)
+      (arguments
+       (list
+        #:tests? #t
+        #:test-command #~(list "buttercup" "-l" "lua-mode.el")
+        #:phases
+        #~(modify-phases %standard-phases
+            ;; XXX: These tests are not compatible with Buttercup, and cause
+            ;; build to fail.  Remove them until they are fixed by upstream.
+            (add-after 'unpack 'remove-faulty-tests
+              (lambda _
+                (delete-file "test/test-indentation.el"))))))
+      (native-inputs
+       (list emacs-buttercup lua))
+      (home-page "https://github.com/immerrr/lua-mode/")
+      (synopsis "Major mode for Lua")
+      (description
+       "This Emacs package provides a mode for @uref{https://www.lua.org/,
 Lua programming language}.")
-    (license license:gpl2+)))
+      (license license:gpl2+))))
 
 (define-public emacs-ebuild-mode
   (package
@@ -32750,14 +32760,14 @@ well as an option for visually flashing evaluated s-expressions.")
 (define-public emacs-tramp
   (package
     (name "emacs-tramp")
-    (version "2.6.2.1")
+    (version "2.6.2.2")
     (source
      (origin
        (method url-fetch)
        (uri (string-append "https://elpa.gnu.org/packages/"
                            "tramp-" version ".tar"))
        (sha256
-        (base32 "145riknpdvw7rvpz20m766yci3w012f241mw38pbbb9cb8pn2rbf"))))
+        (base32 "0bbsff2qr71f70nxhdi19b3jzpv6bgfb7x7qkrccsygvsvgyrb2h"))))
     (build-system emacs-build-system)
     (arguments
      (list
