@@ -187,13 +187,13 @@
            xcb-util-keysyms
            xcb-util-wm))
     (arguments
-     '(#:phases
-       (modify-phases %standard-phases
-         (delete 'configure))           ; no configure script
-       #:tests? #f                      ; no check target
-       #:make-flags
-       (list "CC=gcc"
-             (string-append "PREFIX=" %output))))
+     (list #:phases
+           #~(modify-phases %standard-phases
+               (delete 'configure))           ; no configure script
+           #:tests? #f                      ; no check target
+           #:make-flags
+           #~(list (string-append "CC=" #$(cc-for-target))
+                   (string-append "PREFIX=" #$output))))
     (home-page "https://github.com/baskerville/bspwm")
     (synopsis "Tiling window manager based on binary space partitioning")
     (description "bspwm is a tiling window manager that represents windows as
@@ -1759,6 +1759,50 @@ modules for building a Wayland compositor.")
     (propagated-inputs (modify-inputs (package-propagated-inputs wlroots)
                          (delete libdisplay-info)))))
 
+(define-public wlroots-0.15
+  (package
+    (inherit wlroots)
+    (name "wlroots-0.15")
+    (version "0.15.1")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://gitlab.freedesktop.org/wlroots/wlroots")
+             (commit version)))
+       (file-name (git-file-name "wlroots" version))
+       (sha256
+        (base32 "00s73nhi3sc48l426jdlqwpclg41kx1hv0yk4yxhbzw19gqpfm1h"))))))
+
+(define-public wmenu
+  (package
+    (name "wmenu")
+    (version "0.1.7")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://git.sr.ht/~adnano/wmenu")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "0wjn68r5cx4zvw7sby6sk2ip5h4fn0jbgb1nasm9nsgjpv63pnpm"))))
+    (build-system meson-build-system)
+    (native-inputs (append (if (%current-target-system)
+                               ;; for wayland-scanner
+                               (list pkg-config-for-build
+                                     wayland)
+                               '())
+                           (list pkg-config scdoc)))
+    (inputs (list cairo pango wayland libxkbcommon wayland-protocols))
+    (home-page "https://git.sr.ht/~adnano/wmenu")
+    (synopsis "Dynamic menu for Wayland")
+    (description "@command{wmenu} is a dynamic menu for Wayland, which reads a list
+of newline-separated items from stdin.  When the user selects an item and presses
+Return, their choice is printed to stdout and wmenu terminates.  Entering text will
+narrow the items to those matching the tokens in the input.")
+    (license license:expat)))
+
 (define-public sway
   (package
     (name "sway")
@@ -3219,7 +3263,7 @@ session.  Nor does it depend on any UI toolkits such as Qt or GTK.")
            linux-pam
            pango
            wayland
-           wlroots-0.16))
+           wlroots-0.15))
     (arguments
      `(#:tests? #f                      ; no tests
        #:make-flags

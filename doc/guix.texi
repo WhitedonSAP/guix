@@ -7632,6 +7632,9 @@ contain OpenPGP public keys in @file{.key} files, either in binary form
 or ``ASCII-armored''.  By default the keyring is loaded from the branch
 named @code{keyring}.
 
+@item --end=@var{commit}
+Authenticate revisions up to @var{commit}.
+
 @item --stats
 Display commit signing statistics upon completion.
 
@@ -21081,7 +21084,7 @@ the @code{loopback} Shepherd service.
 @defvar %qemu-static-networking
 This is the @code{static-networking} record representing network setup
 when using QEMU's user-mode network stack on @code{eth0} (@pxref{Using
-the user mode network stack,,, QEMU, QEMU Documentation}).
+the user mode network stack,,, qemu, QEMU Documentation}).
 @end defvar
 
 @cindex DHCP, networking service
