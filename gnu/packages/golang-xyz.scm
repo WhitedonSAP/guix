@@ -901,6 +901,40 @@ expressing configuration which is easy for both humans and machines to read.")
     (home-page "https://github.com/hashicorp/hcl")
     (license license:mpl2.0)))
 
+(define-public go-github-com-hashicorp-go-hclog
+  (package
+    (name "go-github-com-hashicorp-go-hclog")
+    (version "1.6.2")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/hashicorp/go-hclog")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "1lvr4ga95a0xb62vgq1hy558x3r65hn2d0h7bf0a88lsfsrcik0n"))))
+    (build-system go-build-system)
+    (arguments
+     (list
+      #:import-path "github.com/hashicorp/go-hclog"))
+    (propagated-inputs
+     (list go-github-com-fatih-color
+           go-github-com-mattn-go-isatty
+           go-golang-org-x-tools))
+    (native-inputs
+     (list go-github-com-stretchr-testify))
+    (home-page "https://github.com/hashicorp/go-hclog")
+    (synopsis "Key/value logging interface for Go")
+    (description
+     "This package provides a simple key/value logging interface for Golang
+for use in development and production environments.  Unlike the standard
+library @code{log} package, this package provides logging levels that provide
+decreased output based upon the desired amount of output.  It also comes with
+a command-line program @code{hclogvet} that can be used to check that the logging level
+methods on @code{hclog.Logger} are used correctly.")
+    (license license:expat)))
+
 (define-public go-github-com-hashicorp-go-multierror
   (package
     (name "go-github-com-hashicorp-go-multierror")
@@ -1331,6 +1365,30 @@ command line flags, config files, and default struct values.")
        "Go Windows Service wrapper compatible with GNU/Linux.  Windows tests
 @url{https://github.com/judwhite/go-svc/raw/master/svc/svc_windows_test.go,here}.")
       (license license:expat))))
+
+(define-public go-github-com-multiformats-go-varint
+  (package
+    (name "go-github-com-multiformats-go-varint")
+    (version "0.0.7")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/multiformats/go-varint")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "0l4s0z3rc3d350zp6qximl1jjhic6l8w74wkmx244jgfzsxd93af"))))
+    (build-system go-build-system)
+    (arguments
+     (list
+      #:import-path "github.com/mreiferson/go-options"))
+    (home-page "https://github.com/mreiferson/go-options")
+    (synopsis "Varint helpers that enforce minimal encoding")
+    (description
+     "This package provides a functionality for encoding and decoding unsigned
+varints.")
+    (license license:expat)))
 
 (define-public go-github-com-nats-io-nats-go
   (package
@@ -1933,6 +1991,22 @@ Go.")
 ;;;
 ;;; Executables:
 ;;;
+
+(define-public go-hclogvet
+  (package
+    (inherit go-github-com-hashicorp-go-hclog)
+    (name "go-hclogvet")
+    (arguments
+     (list
+      #:import-path "github.com/hashicorp/go-hclog/hclogvet"
+      #:unpack-path "github.com/hashicorp/go-hclog"
+      #:install-source? #f))
+    (propagated-inputs
+     (list go-golang-org-x-tools))
+    (description
+     "@code{hclogvet} is a @code{go vet} tool for checking that the
+Trace/Debug/Info/Warn/Error methods on @code{hclog.Logger} are used
+correctly.")))
 
 (define-public go-numcpus
   (package
