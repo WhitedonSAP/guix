@@ -4,6 +4,7 @@
 ;;; Copyright © 2018 Pierre-Antoine Rouby <pierre-antoine.rouby@inria.fr>
 ;;; Copyright © 2019 Brian Leung <bkleung89@gmail.com>
 ;;; Copyright © 2019 Leo Famulari <leo@famulari.name>
+;;; Copyright © 2019 Vagrant Cascadian <vagrant@debian.org>
 ;;; Copyright © 2019, 2020, 2021 Efraim Flashner <efraim@flashner.co.il>
 ;;; Copyright © 2020 Joseph LaFreniere <joseph@lafreniere.xyz>
 ;;; Copyright © 2020 Oleg Pykhalov <go.wigust@gmail.com>
@@ -1221,6 +1222,33 @@ called concurrently with themselves and each other.")
 customized globally.")
     (license license:expat)))
 
+(define-public go-github-com-lib-pq
+  (package
+    (name "go-github-com-lib-pq")
+    (version "1.2.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/lib/pq")
+             (commit (string-append "v" version))))
+       (file-name (git-file-name name version))
+       (sha256
+        (base32 "08j1smm6rassdssdks4yh9aspa1dv1g5nvwimmknspvhx8a7waqz"))))
+    (build-system go-build-system)
+    (arguments
+     (list
+      #:import-path "github.com/lib/pq"
+      ;; The tests seem to fail without access to the network or a running
+      ;; Postgres instance.
+      #:tests? #f))
+    (home-page "https://github.com/lib/pq")
+    (synopsis "Golang Postgres driver for Go's database/sql")
+    (description
+     "This package provides a pure Go Postgres driver for Go's
+database/sql package.")
+    (license license:expat)))
+
 (define-public go-github-com-matryer-try
   (package
     (name "go-github-com-matryer-try")
@@ -1382,8 +1410,8 @@ command line flags, config files, and default struct values.")
     (build-system go-build-system)
     (arguments
      (list
-      #:import-path "github.com/mreiferson/go-options"))
-    (home-page "https://github.com/mreiferson/go-options")
+      #:import-path "github.com/multiformats/go-varint"))
+    (home-page "https://github.com/multiformats/go-varint")
     (synopsis "Varint helpers that enforce minimal encoding")
     (description
      "This package provides a functionality for encoding and decoding unsigned
@@ -1917,7 +1945,7 @@ weighted moving averages}.")
     ;; There is not much information provided by the project, see
     ;; <https://github.com/whyrusleeping/go-sysinfo/issues>.
     (description
-     "This packages provides a basic system stats like @code{DiskUsage} and
+     "This package provides a basic system stats like @code{DiskUsage} and
 @code{MemoryInfo}.")
     (license license:expat)))
 
