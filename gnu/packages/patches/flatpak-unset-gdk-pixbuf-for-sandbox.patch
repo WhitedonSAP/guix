@@ -1,0 +1,21 @@
+Most Guix system setup with desktop evironment will install GDK_PIXBUF_MODULE_FILE
+environment variable in the system profile, and it'll be leaked into the sandbox
+environment of flatpak, so the applications in sandbox may fail to find correct
+GdkPixbuf loaders.
+
+This patch unset the GDK_PIXBUF_MODULE_FILE environment variable before running
+the sandboxed applications, prevents it to load GdkPixbuf loaders from the path
+of host system.
+
+--- a/common/flatpak-run.c
++++ b/common/flatpak-run.c
+@@ -1900,8 +1900,9 @@ static const ExportData default_exports[] = {
+   {"XKB_CONFIG_ROOT", NULL},
+   {"GIO_EXTRA_MODULES", NULL},
+   {"GDK_BACKEND", NULL},
++  {"GDK_PIXBUF_MODULE_FILE", NULL},
+   {"VK_DRIVER_FILES", NULL},
+   {"VK_ICD_FILENAMES", NULL},
+ };
+ 
+ static const ExportData no_ld_so_cache_exports[] = {
